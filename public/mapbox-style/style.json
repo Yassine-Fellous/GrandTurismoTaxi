@@ -1,0 +1,40 @@
+{
+    "version": 8,
+    "name": "grand tourismo taxi",
+    "metadata": {
+        "mapbox:autocomposite": true,
+        "mapbox:thumb": "data:image/webp;base64,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",
+        "mapbox:uiParadigm": "imports",
+        "mapbox:sdk-support": {
+            "js": "3.17.0",
+            "android": "11.17.0",
+            "ios": "11.17.0"
+        },
+        "mapbox:groups": {},
+        "mapbox:trackposition": true
+    },
+    "center": [5.367229500000008, 43.27214539332061],
+    "zoom": 10.865432722294,
+    "bearing": 0,
+    "pitch": 0,
+    "terrain": null,
+    "imports": [
+        {
+            "id": "basemap",
+            "url": "mapbox://styles/mapbox/standard",
+            "config": {"theme": "faded", "lightPreset": "night"}
+        }
+    ],
+    "sources": {},
+    "sprite": "mapbox://sprites/smy13009/cmkby5w41002w01quhlsl25u7/b8fjw435hx85pp7j172f016pl",
+    "glyphs": "mapbox://fonts/mapbox/{fontstack}/{range}.pbf",
+    "projection": {"name": "globe"},
+    "layers": [],
+    "created": "2026-01-13T02:02:46.610Z",
+    "modified": "2026-01-13T03:04:14.023Z",
+    "id": "cmkby5w41002w01quhlsl25u7",
+    "owner": "smy13009",
+    "visibility": "public",
+    "protected": false,
+    "draft": false
+}
