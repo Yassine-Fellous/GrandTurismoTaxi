@@ -244,7 +244,7 @@ export async function sendReservationEmail(reservation: ReservationEmailData) {
       console.log('✅ Email de confirmation envoyé au client');
     }
 
-    return { success: true, messageId: result.messageId };
+    return { success: true };
   } catch (error) {
     console.error('❌ Erreur lors de l\'envoi de l\'email:', error);
     return { success: false, error };
@@ -357,7 +357,7 @@ export async function sendConfirmationEmail(reservation: ReservationEmailData) {
     const result = await apiInstance.sendTransacEmail(clientEmail);
     console.log('✅ Email de confirmation envoyé au client:', result);
 
-    return { success: true, messageId: result.messageId };
+    return { success: true };
   } catch (error) {
     console.error('❌ Erreur lors de l\'envoi de l\'email de confirmation:', error);
     return { success: false, error };

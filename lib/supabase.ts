@@ -42,6 +42,9 @@ export interface Reservation {
   // Statut
   status: ReservationStatus;
   
+  // Lien Google Maps
+  maps_link?: string;
+  
   // Timestamps
   created_at: string;
   updated_at?: string;
