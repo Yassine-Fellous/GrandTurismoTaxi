@@ -251,6 +251,106 @@ export async function sendReservationEmail(reservation: ReservationEmailData) {
   }
 }
 
+export async function sendRejectionEmail(reservation: ReservationEmailData) {
+  const fromEmail = process.env.FROM_EMAIL || 'granturismotaxi@gmail.com';
+  const fromName = process.env.FROM_NAME || 'Gran Turismo Taxi';
+
+  if (!reservation.email) {
+    console.log('⚠️ Aucun email client, envoi annulé');
+    return { success: false, error: 'No email provided' };
+  }
+
+  try {
+    const clientEmail = new brevo.SendSmtpEmail();
+    clientEmail.sender = { name: fromName, email: fromEmail };
+    clientEmail.to = [{ email: reservation.email, name: reservation.nom }];
+    clientEmail.subject = `⚠️ Course non disponible - Gran Turismo Taxi`;
+    clientEmail.htmlContent = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; line-height: 1.6; color: #e5e5e5; background: #0a0a0a; margin: 0; padding: 0; }
+            .container { max-width: 600px; margin: 20px auto; background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 12px; overflow: hidden; }
+            .header { background: linear-gradient(135deg, #666 0%, #444 100%); color: white; padding: 40px 30px; text-align: center; }
+            .header h1 { margin: 0; font-size: 32px; font-weight: 700; letter-spacing: 2px; }
+            .header p { margin: 10px 0 0 0; font-size: 16px; }
+            .content { padding: 35px 30px; }
+            .field { margin-bottom: 20px; }
+            .label { font-weight: 600; color: #e00000; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
+            .value { font-size: 16px; margin-top: 8px; color: #e5e5e5; }
+            .footer { background: #0a0a0a; text-align: center; padding: 25px; color: #888; font-size: 13px; border-top: 1px solid #2a2a2a; }
+            .alert-box { background: #2a0000; border-left: 4px solid #ff6b6b; padding: 20px; margin: 25px 0; border-radius: 5px; }
+            .alert-box p { margin: 0; color: #e5e5e5; font-size: 15px; line-height: 1.6; }
+            .icon { font-size: 48px; text-align: center; margin: 20px 0; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>GT TAXI</h1>
+              <p>Concernant votre réservation</p>
+            </div>
+            
+            <div class="content">
+              <div class="icon">⚠️</div>
+              
+              <p>Bonjour <strong>${reservation.nom}</strong>,</p>
+              
+              <div class="alert-box">
+                <p>😔 <strong>Nous sommes désolés</strong><br>
+                Malheureusement, nous ne pouvons pas honorer votre demande de réservation pour le créneau demandé. Tous nos chauffeurs sont déjà réservés à cette date et heure.</p>
+              </div>
+
+              <p><strong>Détails de votre demande :</strong></p>
+
+              <div class="field">
+                <div class="label">📍 TRAJET</div>
+                <div class="value">${reservation.depart} → ${reservation.arrivee}</div>
+              </div>
+
+              <div class="field">
+                <div class="label">📅 DATE ET HEURE DEMANDÉE</div>
+                <div class="value">${new Date(reservation.date_heure).toLocaleString('fr-FR', {
+                  weekday: 'long',
+                  day: '2-digit',
+                  month: 'long',
+                  year: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit'
+                })}</div>
+              </div>
+
+              <div class="alert-box" style="background: #2a1800; border-left-color: #ffa500;">
+                <p>💡 <strong>Vous souhaitez toujours réserver ?</strong><br>
+                Nous vous invitons à faire une nouvelle demande pour un autre créneau horaire ou à nous contacter directement au <strong>06 72 36 20 15</strong> pour trouver une solution ensemble.</p>
+              </div>
+
+              <p style="margin-top: 30px;">Nous espérons pouvoir vous servir prochainement,<br><strong>L'équipe Gran Turismo Taxi</strong></p>
+            </div>
+            
+            <div class="footer">
+              <p><strong>Gran Turismo Taxi</strong></p>
+              <p>📞 06 72 36 20 15</p>
+              <p>📍 Marseille, France</p>
+              <p style="margin-top: 15px; color: #666;">Service de transport professionnel</p>
+            </div>
+          </div>
+        </body>
+      </html>
+    `;
+
+    const result = await apiInstance.sendTransacEmail(clientEmail);
+    console.log('✅ Email de refus envoyé au client:', result);
+
+    return { success: true };
+  } catch (error) {
+    console.error('❌ Erreur lors de l\'envoi de l\'email de refus:', error);
+    return { success: false, error };
+  }
+}
+
 export async function sendConfirmationEmail(reservation: ReservationEmailData) {
   const fromEmail = process.env.FROM_EMAIL || 'granturismotaxi@gmail.com';
   const fromName = process.env.FROM_NAME || 'Gran Turismo Taxi';

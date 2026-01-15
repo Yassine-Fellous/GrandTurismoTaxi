@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
-import { sendConfirmationEmail } from '@/lib/email';
+import { sendConfirmationEmail, sendRejectionEmail } from '@/lib/email';
 
 // GET - Récupérer toutes les réservations
 export async function GET() {
@@ -82,6 +82,30 @@ export async function PATCH(request: Request) {
         console.log('✅ Email de confirmation envoyé');
       } catch (emailError) {
         console.error('⚠️ Erreur lors de l\'envoi de l\'email (réservation confirmée quand même):', emailError);
+      }
+    }
+
+    // Si le statut passe à "rejected", envoyer un email de refus au client
+    if (status === 'rejected' && data) {
+      console.log('📧 Envoi de l\'email de refus au client...');
+      try {
+        await sendRejectionEmail({
+          id: data.id,
+          nom: data.nom,
+          email: data.email,
+          telephone: data.telephone,
+          depart: data.depart,
+          arrivee: data.arrivee,
+          date_heure: data.date_heure,
+          commentaire: data.commentaire,
+          prix_total: data.prix_total,
+          distance_km: data.distance_km,
+          duree_minutes: data.duree_minutes,
+          status: data.status
+        });
+        console.log('✅ Email de refus envoyé');
+      } catch (emailError) {
+        console.error('⚠️ Erreur lors de l\'envoi de l\'email (réservation rejetée quand même):', emailError);
       }
     }
 
